@@ -1,0 +1,35 @@
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Cocktail {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  slug            String            @unique
+  cocktailIngredients CocktailIngredient[]
+  glass           String
+  preparation     String
+  garnish         String
+  images          String[]
+}
+
+model Ingredient {
+  id                  Int               @id @default(autoincrement())
+  name                String            @unique
+  cocktailIngredients CocktailIngredient[]
+}
+
+model CocktailIngredient {
+  id          Int       @id @default(autoincrement())
+  cocktail    Cocktail  @relation(fields: [cocktailId], references: [id])
+  cocktailId  Int
+  ingredient  Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId Int
+  amount      String
+}
